@@ -1,0 +1,6 @@
+{
+  "name": "ThermiLait - Défi Photos Mobile",
+  "description": "Jeu mobile d'association de photos par swipe (retenir/rejeter) pour l'adaptation des bâtiments laitiers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="pwaBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#pwaBg)"/>
+  
+  <!-- Toiture protectrice / bâtiment -->
+  <polygon points="256,90 70,200 95,220 256,125 417,220 442,200" fill="#f8fafc" filter="url(#shadow)"/>
+  
+  <!-- Tête de vache stylized -->
+  <g transform="translate(156, 175) scale(0.78)" filter="url(#shadow)">
+    <!-- Oreilles -->
+    <ellipse cx="40" cy="80" rx="35" ry="18" fill="#e2e8f0" transform="rotate(-20 40 80)"/>
+    <ellipse cx="216" cy="80" rx="35" ry="18" fill="#e2e8f0" transform="rotate(20 216 80)"/>
+    <!-- Tête -->
+    <path d="M70,70 Q128,50 186,70 Q210,130 200,200 Q128,240 56,200 Q46,130 70,70 Z" fill="#ffffff"/>
+    <!-- Taches noires -->
+    <path d="M70,70 Q110,60 100,120 Q65,110 70,70 Z" fill="#0f172a"/>
+    <path d="M186,70 Q170,110 195,140 Q205,100 186,70 Z" fill="#0f172a"/>
+    <!-- Yeux -->
+    <circle cx="95" cy="125" r="9" fill="#0f172a"/>
+    <circle cx="161" cy="125" r="9" fill="#0f172a"/>
+    <circle cx="97" cy="123" r="3" fill="#ffffff"/>
+    <circle cx="163" cy="123" r="3" fill="#ffffff"/>
+    <!-- Museau -->
+    <ellipse cx="128" cy="190" rx="42" ry="26" fill="#fbcfe8"/>
+    <circle cx="112" cy="190" r="5" fill="#db2777"/>
+    <circle cx="144" cy="190" r="5" fill="#db2777"/>
+  </g>
+
+  <!-- Symbole de fraîcheur / vent -->
+  <path d="M80,410 C180,390 320,430 432,410" stroke="#a7f3d0" stroke-width="16" stroke-linecap="round" fill="none"/>
+  <path d="M120,445 C220,425 350,460 410,445" stroke="#6ee7b7" stroke-width="12" stroke-linecap="round" fill="none"/>
+</svg>
