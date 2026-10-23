@@ -119,6 +119,7 @@ export function resetAllData(): { categories: Category[]; problems: ProblemItem[
 
 export function exportBackupJson(): void {
   const data = {
+    title: 'KeepCool Challenge - Jeu de photos préparé',
     categories: getCategories(),
     problems: getProblems(),
     exportDate: new Date().toISOString()
@@ -127,22 +128,29 @@ export function exportBackupJson(): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `thermilait_banque_photos_${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `keepcool_challenge_photos_${new Date().toISOString().split('T')[0]}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
-export function importBackupJson(jsonString: string): { success: boolean; error?: string } {
+export function importBackupJson(jsonString: string): { 
+  success: boolean; 
+  data?: { categories: Category[]; problems: ProblemItem[] };
+  error?: string;
+} {
   try {
     const parsed = JSON.parse(jsonString);
     if (!parsed || !Array.isArray(parsed.categories) || !Array.isArray(parsed.problems)) {
-      return { success: false, error: 'Format de fichier non reconnu.' };
+      return { success: false, error: 'Format de fichier non valide : vérifiez qu\'il s\'agit d\'un jeu de photos KeepCool.' };
     }
     saveCategories(parsed.categories);
     saveProblems(parsed.problems);
-    return { success: true };
+    return { 
+      success: true, 
+      data: { categories: parsed.categories, problems: parsed.problems } 
+    };
   } catch (e) {
     return { success: false, error: 'Fichier JSON corrompu ou illisible.' };
   }

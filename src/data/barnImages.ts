@@ -422,14 +422,114 @@ export const BARN_ILLUSTRATIONS: Record<string, string> = {
   distracteur_arroser_litiere: svgToDataUrl(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
       <rect width="600" height="400" fill="#3f3f46"/>
-      <!-- Litière de paille trempée qui pourrit -->
       <rect x="50" y="220" width="500" height="150" fill="#713f12"/>
       <text x="140" y="140" font-family="sans-serif" font-size="16" font-weight="bold" fill="#fca5a5">PIÈGE : ARROSER LA LITIÈRE</text>
       <text x="120" y="170" font-family="sans-serif" font-size="12" fill="#fde047">Fermentation accrue • Prolifération bactéries (mammites)</text>
       <text x="120" y="190" font-family="sans-serif" font-size="12" fill="#fde047">Humidité étouffante au niveau de la mamelle</text>
-
       <rect x="180" y="270" width="240" height="45" rx="8" fill="#dc2626"/>
       <text x="210" y="298" font-family="sans-serif" font-size="14" font-weight="bold" fill="#ffffff">❌ DANGER SANITAIRE MAJEUR</text>
     </svg>
+  `),
+
+  // Problème 5 : Faîtage fermé borgne bloquant l'effet cheminée
+  faitage_borgne_bloque: svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+      <rect width="600" height="400" fill="#fff7ed"/>
+      <polygon points="300,50 60,180 540,180" fill="#475569"/>
+      <polygon points="290,50 310,50 320,80 280,80" fill="#334155"/>
+      <!-- Air chaud piégé au sommet du toit -->
+      <polygon points="300,60 140,175 460,175" fill="#ea580c" fill-opacity="0.5"/>
+      <text x="210" y="125" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">CUPULE D'AIR CHAUD PIÉGÉE (38°C)</text>
+      <rect x="25" y="25" width="250" height="55" rx="10" fill="#c2410c" fill-opacity="0.95"/>
+      <text x="40" y="46" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">⚠️ FAÎTAGE FERMÉ ÉTOUFFANT</text>
+      <text x="40" y="66" font-family="sans-serif" font-size="10" fill="#ffedd5">Absence d'effet tirage thermique</text>
+    </svg>
+  `),
+
+  // Solution 5 : Lanterneau d'extraction faîtière ouverte
+  lanterneau_faitiere_ouvert: svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+      <rect width="600" height="400" fill="#f0fdf4"/>
+      <polygon points="260,80 60,180 260,180" fill="#475569"/>
+      <polygon points="340,80 540,180 340,180" fill="#475569"/>
+      <!-- Lanterneau pare-pluie surélevé créant un tirage puissant -->
+      <rect x="230" y="35" width="140" height="15" rx="4" fill="#047857"/>
+      <line x1="250" y1="50" x2="250" y2="80" stroke="#0f172a" stroke-width="4"/>
+      <line x1="350" y1="50" x2="350" y2="80" stroke="#0f172a" stroke-width="4"/>
+      <!-- Échappement dynamique de la chaleur vers le ciel -->
+      <g stroke="#059669" stroke-width="3" stroke-linecap="round">
+        <path d="M280,100 L280,20"/>
+        <path d="M300,110 L300,10"/>
+        <path d="M320,100 L320,20"/>
+      </g>
+      <rect x="25" y="25" width="260" height="55" rx="10" fill="#065f46" fill-opacity="0.95"/>
+      <text x="40" y="46" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">💨 EFFET CHEMINÉE ACTIF</text>
+      <text x="40" y="66" font-family="sans-serif" font-size="10" fill="#d1fae5">Ouverture faîtière 30cm avec déflecteur</text>
+    </svg>
+  `),
+
+  // Problème 6 : Tôle bac acier sans isolation surchauffée
+  tole_brulante_sans_isolation: svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+      <rect width="600" height="400" fill="#fee2e2"/>
+      <circle cx="300" cy="40" r="45" fill="#dc2626"/>
+      <!-- Tôle bac acier métallique rougeoyante de chaleur -->
+      <polygon points="300,55 50,150 550,150" fill="#b91c1c"/>
+      <line x1="100" y1="150" x2="100" y2="280" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="300" y1="150" x2="300" y2="280" stroke="#ef4444" stroke-width="3" stroke-dasharray="6 4"/>
+      <line x1="500" y1="150" x2="500" y2="280" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="180" y="190" font-family="sans-serif" font-size="13" font-weight="bold" fill="#991b1b">RAYONNEMENT TOITURE : 68°C</text>
+      <rect x="25" y="25" width="260" height="55" rx="10" fill="#991b1b" fill-opacity="0.95"/>
+      <text x="40" y="46" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">☀️ TÔLE NU SANS ISOLATION</text>
+      <text x="40" y="66" font-family="sans-serif" font-size="10" fill="#fecaca">Radiateur thermique géant au-dessus du bétail</text>
+    </svg>
+  `),
+
+  // Solution 6 : Isolation sous toiture panneaux sandwich
+  isolation_sous_toiture: svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+      <rect width="600" height="400" fill="#f0fdf4"/>
+      <!-- Couverture extérieure -->
+      <polygon points="300,55 50,150 550,150" fill="#64748b"/>
+      <!-- COUCHE ISOLANTE ÉPAISSE (Panneaux sandwich isolants 40mm) -->
+      <polygon points="300,75 70,165 530,165" fill="#facc15" stroke="#ca8a04" stroke-width="3"/>
+      <text x="170" y="130" font-family="sans-serif" font-size="12" font-weight="bold" fill="#713f12">BARRIÈRE THERMIQUE ISOLANTE 40 MM</text>
+      <rect x="100" y="240" width="400" height="80" rx="8" fill="#dcfce7"/>
+      <text x="170" y="285" font-family="sans-serif" font-size="12" font-weight="bold" fill="#166534">SOUS-FACE FRAÎCHE À 24°C</text>
+      <rect x="25" y="25" width="260" height="55" rx="10" fill="#15803d" fill-opacity="0.95"/>
+      <text x="40" y="46" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">🛡️ ISOLATION EN PANNEAUX</text>
+      <text x="40" y="66" font-family="sans-serif" font-size="10" fill="#bbf7d0">Rupteur d'infrarouges • Gain de -10°C au dos</text>
+    </svg>
+  `),
+
+  // Problème 7 : Aire d'exercice extérieure bétonnée sans ombre
+  cour_exterieure_soleil: svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+      <rect width="600" height="400" fill="#ffedd5"/>
+      <circle cx="500" cy="50" r="50" fill="#f97316"/>
+      <rect x="0" y="220" width="600" height="180" fill="#a8a29e"/>
+      <text x="180" y="300" font-family="sans-serif" font-size="14" font-weight="bold" fill="#7f1d1d">BÉTON BRÛLANT AU SOLEIL : 52°C</text>
+      <rect x="25" y="25" width="260" height="55" rx="10" fill="#c2410c" fill-opacity="0.95"/>
+      <text x="40" y="46" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">☀️ AIRE D'EXERCICE SANS OMBRE</text>
+      <text x="40" y="66" font-family="sans-serif" font-size="10" fill="#ffedd5">Vaches confinées refusant de sortir</text>
+    </svg>
+  `),
+
+  // Solution 7 : Voiles d'ombrage et casquette débordante
+  voiles_ombrage_auvent: svgToDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+      <rect width="600" height="400" fill="#f0f9ff"/>
+      <!-- Grand voile d'ombrage tendu créant une vaste zone fraîche -->
+      <polygon points="60,110 540,110 480,180 120,180" fill="#0284c7" fill-opacity="0.85"/>
+      <line x1="60" y1="110" x2="30" y2="280" stroke="#475569" stroke-width="4"/>
+      <line x1="540" y1="110" x2="570" y2="280" stroke="#475569" stroke-width="4"/>
+      <!-- Zone d'ombre au sol -->
+      <polygon points="100,220 500,220 540,360 60,360" fill="#38bdf8" fill-opacity="0.25"/>
+      <text x="190" y="280" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0369a1">ZONE D'OMBRE TENDUE 90%</text>
+      <rect x="25" y="25" width="260" height="55" rx="10" fill="#0284c7" fill-opacity="0.95"/>
+      <text x="40" y="46" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">☂️ VOILE D'OMBRAGE EXTÉRIEUR</text>
+      <text x="40" y="66" font-family="sans-serif" font-size="10" fill="#e0f2fe">Ombrage 80% • Libère la circulation des vaches</text>
+    </svg>
   `)
 };
+

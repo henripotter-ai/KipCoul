@@ -1,114 +1,125 @@
-import React, { useState } from 'react';
-import { X, ZoomIn, ZoomOut, RotateCcw, Move } from 'lucide-react';
-import { motion } from 'motion/react';
+import React, { useState, useRef, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface PhotoZoomModalProps {
   isOpen: boolean;
   onClose: () => void;
   imageUrl: string;
-  title: string;
+  title?: string;
   subtitle?: string;
 }
 
 export const PhotoZoomModal: React.FC<PhotoZoomModalProps> = ({
   isOpen,
   onClose,
-  imageUrl,
-  title,
-  subtitle
+  imageUrl
 }) => {
   const [scale, setScale] = useState<number>(1);
+  const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const touchStartDist = useRef<number | null>(null);
+  const touchStartScale = useRef<number>(1);
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null);
+  const touchStartOffset = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const lastTapTime = useRef<number>(0);
+
+  // Réinitialiser le zoom quand la modal s'ouvre
+  useEffect(() => {
+    if (isOpen) {
+      setScale(1);
+      setOffset({ x: 0, y: 0 });
+    }
+  }, [isOpen, imageUrl]);
 
   if (!isOpen) return null;
 
-  const handleZoomIn = () => {
-    setScale(prev => Math.min(prev + 0.35, 3.0));
+  // Calcul de la distance entre deux doigts
+  const getDistance = (touch1: React.Touch, touch2: React.Touch) => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
   };
 
-  const handleZoomOut = () => {
-    setScale(prev => Math.max(prev - 0.35, 0.8));
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      // Début du pincement à deux doigts
+      touchStartDist.current = getDistance(e.touches[0], e.touches[1]);
+      touchStartScale.current = scale;
+    } else if (e.touches.length === 1) {
+      // Début du déplacement à un doigt (si zoomé)
+      touchStartPos.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      touchStartOffset.current = { ...offset };
+
+      // Double tap pour zoomer / dézoomer rapidement
+      const now = Date.now();
+      if (now - lastTapTime.current < 300) {
+        if (scale > 1.2) {
+          setScale(1);
+          setOffset({ x: 0, y: 0 });
+        } else {
+          setScale(2.5);
+        }
+      }
+      lastTapTime.current = now;
+    }
   };
 
-  const handleReset = () => {
-    setScale(1);
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && touchStartDist.current !== null) {
+      // Gestion du pinch-to-zoom à deux doigts
+      const currentDist = getDistance(e.touches[0], e.touches[1]);
+      const factor = currentDist / touchStartDist.current;
+      const nextScale = Math.min(Math.max(touchStartScale.current * factor, 1), 4);
+      setScale(nextScale);
+      if (nextScale <= 1) {
+        setOffset({ x: 0, y: 0 });
+      }
+    } else if (e.touches.length === 1 && touchStartPos.current && scale > 1) {
+      // Déplacement de l'image agrandie
+      const dx = e.touches[0].clientX - touchStartPos.current.x;
+      const dy = e.touches[0].clientY - touchStartPos.current.y;
+      const maxOffset = 180 * (scale - 1);
+      setOffset({
+        x: Math.min(Math.max(touchStartOffset.current.x + dx, -maxOffset), maxOffset),
+        y: Math.min(Math.max(touchStartOffset.current.y + dy, -maxOffset), maxOffset)
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchStartDist.current = null;
+    touchStartPos.current = null;
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/95 flex flex-col justify-between p-2 sm:p-4 animate-in fade-in duration-150">
-      {/* Barre supérieure */}
-      <div className="flex items-center justify-between text-white p-2 border-b border-white/10 z-10">
-        <div className="min-w-0 pr-2">
-          <h3 className="font-extrabold text-xs sm:text-sm text-white truncate">{title}</h3>
-          {subtitle && (
-            <p className="text-[10px] text-emerald-300 truncate">{subtitle}</p>
-          )}
-        </div>
+    <div
+      ref={containerRef}
+      className="fixed inset-0 z-50 bg-black flex items-center justify-center select-none overflow-hidden touch-none"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Bouton de fermeture discret translucide */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-black/60 hover:bg-black/90 active:scale-95 text-white/90 backdrop-blur-xs transition-all"
+        title="Fermer"
+      >
+        <X className="w-6 h-6 stroke-[2.5]" />
+      </button>
 
-        <button
-          onClick={onClose}
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center justify-center shrink-0"
-          title="Fermer"
-        >
-          <X className="w-5 h-5 stroke-[2.5]" />
-        </button>
-      </div>
-
-      {/* Zone centrale : Image zoomable et déplaçable */}
-      <div className="flex-1 overflow-hidden relative flex items-center justify-center touch-none">
-        <motion.div
-          drag={scale > 1}
-          dragConstraints={{ left: -200 * scale, right: 200 * scale, top: -200 * scale, bottom: 200 * scale }}
-          className="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
-        >
-          <img
-            src={imageUrl}
-            alt={title}
-            style={{
-              transform: `scale(${scale})`,
-              transition: 'transform 0.15s ease-out'
-            }}
-            className="max-h-[75vh] max-w-[95vw] object-contain select-none pointer-events-none rounded-lg"
-          />
-        </motion.div>
-
-        {scale > 1 && (
-          <div className="absolute top-3 left-3 bg-black/60 text-white text-[10px] font-medium px-2 py-1 rounded-full flex items-center gap-1 pointer-events-none">
-            <Move className="w-3 h-3 text-emerald-400" />
-            <span>Glissez pour vous déplacer</span>
-          </div>
-        )}
-      </div>
-
-      {/* Barre inférieure des commandes de zoom */}
-      <div className="p-2 sm:p-3 bg-black/80 rounded-2xl border border-white/10 flex items-center justify-between text-white z-10">
-        <span className="text-xs font-bold text-slate-300 pl-2">
-          Zoom : {Math.round(scale * 100)}%
-        </span>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleZoomOut}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center gap-1 text-xs"
-            title="Dézoomer"
-          >
-            <ZoomOut className="w-4 h-4" />
-          </button>
-          <button
-            onClick={handleReset}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white flex items-center gap-1 text-xs"
-            title="Réinitialiser"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-          <button
-            onClick={handleZoomIn}
-            className="p-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white flex items-center gap-1 text-xs font-bold"
-            title="Zoomer"
-          >
-            <ZoomIn className="w-4 h-4" />
-            <span>Agrandir</span>
-          </button>
-        </div>
+      {/* Image plein écran sans entête ni outils */}
+      <div className="w-full h-full flex items-center justify-center">
+        <img
+          src={imageUrl}
+          alt=""
+          style={{
+            transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+            transition: touchStartDist.current ? 'none' : 'transform 0.1s ease-out'
+          }}
+          className="max-h-full max-w-full object-contain pointer-events-none"
+        />
       </div>
     </div>
   );

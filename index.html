@@ -3,22 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ThermiLait - Défi Photos Bâtiments Laitiers</title>
-    <meta name="description" content="Jeu d'association de photos par swipe sur smartphone pour l'adaptation des étables laitières au climat estival." />
-    <meta property="og:title" content="ThermiLait - Défi Photos Bâtiments Laitiers" />
-    <meta property="og:description" content="Jeu d'association de photos par swipe sur smartphone pour l'adaptation des étables laitières au climat estival." />
+    <title>KeepCool Challenge - Trouver la meilleure solution pour adapter le bâtiment</title>
+    <meta name="description" content="KeepCool Challenge : Trouver la meilleure solution pour adapter le bâtiment d'élevage laitier au climat estival." />
+    <meta property="og:title" content="KeepCool Challenge" />
+    <meta property="og:description" content="Trouver la meilleure solution pour adapter le bâtiment" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#047857" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="ThermiLait" />
+    <meta name="apple-mobile-web-app-title" content="KeepCool" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.log('SW registration error:', err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
 

@@ -75,16 +75,22 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
   const [zoomModal, setZoomModal] = useState<{
     isOpen: boolean;
     url: string;
-    title: string;
+    title?: string;
   }>({
     isOpen: false,
-    url: '',
-    title: ''
+    url: ''
   });
+
+  const [statusToast, setStatusToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const probImgInputRef = useRef<HTMLInputElement>(null);
   const solImgInputRef = useRef<HTMLInputElement>(null);
+
+  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
+    setStatusToast({ text, type });
+    setTimeout(() => setStatusToast(null), 3000);
+  };
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -94,7 +100,7 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner un fichier image valide.');
+      showToast('Veuillez sélectionner un fichier image valide.', 'error');
       return;
     }
 
@@ -173,14 +179,14 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
     saveProblems(updated);
     onDataChange(categories, updated, settings);
     setIsEditingProblem(false);
+    showToast('Situation enregistrée avec succès !');
   };
 
   const handleDeleteProblem = (probId: string) => {
-    if (window.confirm('Voulez-vous supprimer ce problème et sa solution associée ?')) {
-      const updated = problems.filter(p => p.id !== probId);
-      saveProblems(updated);
-      onDataChange(categories, updated, settings);
-    }
+    const updated = problems.filter(p => p.id !== probId);
+    saveProblems(updated);
+    onDataChange(categories, updated, settings);
+    showToast('Situation supprimée.');
   };
 
   const handleAddCategory = () => {
@@ -194,18 +200,18 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
     saveCategories(updated);
     onDataChange(updated, problems, settings);
     setNewCatName('');
+    showToast(`Rubrique « ${newCat.name} » ajoutée.`);
   };
 
   const handleDeleteCategory = (catId: string) => {
     if (categories.length <= 1) {
-      alert('Il faut conserver au moins une rubrique.');
+      showToast('Il faut conserver au moins une rubrique.', 'error');
       return;
     }
-    if (window.confirm('Supprimer cette rubrique ?')) {
-      const updated = categories.filter(c => c.id !== catId);
-      saveCategories(updated);
-      onDataChange(updated, problems, settings);
-    }
+    const updated = categories.filter(c => c.id !== catId);
+    saveCategories(updated);
+    onDataChange(updated, problems, settings);
+    showToast('Rubrique supprimée.');
   };
 
   const handleSaveSettings = (newVal: number) => {
@@ -213,14 +219,14 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
     const newSettings: GameSettings = { seriesLength: newVal };
     saveSettings(newSettings);
     onDataChange(categories, problems, newSettings);
+    showToast(`Nombre de cas par série réglé à ${newVal}.`);
   };
 
   const handleReset = () => {
-    if (window.confirm('Réinitialiser la base avec les exemples de départ ?')) {
-      const res = resetAllData();
-      onDataChange(res.categories, res.problems, settings);
-      setIsEditingProblem(false);
-    }
+    const res = resetAllData();
+    onDataChange(res.categories, res.problems, settings);
+    setIsEditingProblem(false);
+    showToast('Base réinitialisée avec les photos par défaut !');
   };
 
   const handleImportJson = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,11 +236,11 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
     reader.onload = (event) => {
       const content = event.target?.result as string;
       const res = importBackupJson(content);
-      if (res.success) {
-        alert('Photos et rubriques importées avec succès !');
-        window.location.reload();
+      if (res.success && res.data) {
+        onDataChange(res.data.categories, res.data.problems, settings);
+        showToast(`Import réussi : ${res.data.problems.length} photos chargées !`);
       } else {
-        alert(res.error || 'Erreur lors de l\'import.');
+        showToast(res.error || 'Erreur lors de l\'import.', 'error');
       }
     };
     reader.readAsText(file);
@@ -247,7 +253,6 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
         isOpen={zoomModal.isOpen}
         onClose={() => setZoomModal({ ...zoomModal, isOpen: false })}
         imageUrl={zoomModal.url}
-        title={zoomModal.title}
       />
 
       {/* En-tête de retour */}
@@ -257,19 +262,22 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
           className="text-xs font-bold text-slate-700 hover:text-emerald-800 flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-xs"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Retour au jeu</span>
+          <span>Mode Élève</span>
         </button>
 
         <div className="flex items-center gap-1.5">
           <button
-            onClick={exportBackupJson}
-            className="p-1.5 px-2 text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1"
-            title="Exporter toute la base de photos en fichier JSON"
+            onClick={() => {
+              exportBackupJson();
+              showToast('Fichier JSON exporté pour les élèves !');
+            }}
+            className="p-1.5 px-2.5 text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg text-xs font-bold flex items-center gap-1 shadow-2xs"
+            title="Télécharger le fichier .json contenant toutes les photos et textes pour les élèves"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Exporter</span>
+            <span>Exporter pour élèves (.json)</span>
           </button>
-          <label className="p-1.5 px-2 text-slate-700 bg-white border border-slate-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer">
+          <label className="p-1.5 px-2 text-slate-700 bg-white border border-slate-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer hover:bg-slate-50">
             <Upload className="w-3.5 h-3.5" />
             <span>Importer</span>
             <input
@@ -283,12 +291,24 @@ export const PhotoManager: React.FC<PhotoManagerProps> = ({
           <button
             onClick={handleReset}
             className="p-1.5 text-slate-400 hover:text-rose-600 bg-white border border-slate-200 rounded-lg"
-            title="Réinitialiser"
+            title="Réinitialiser avec les exemples par défaut"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
+
+      {/* Message Toast */}
+      {statusToast && (
+        <div className={`p-3 rounded-2xl text-xs flex items-center gap-2 border animate-in fade-in ${
+          statusToast.type === 'error'
+            ? 'bg-rose-50 border-rose-200 text-rose-800'
+            : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        }`}>
+          <span>{statusToast.type === 'error' ? '⚠️' : '✅'}</span>
+          <span className="font-semibold">{statusToast.text}</span>
+        </div>
+      )}
 
       {/* Onglets : Photos vs Rubriques vs Paramètres de série */}
       <div className="flex bg-slate-200/80 p-1 rounded-2xl text-xs font-bold">

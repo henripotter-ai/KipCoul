@@ -60,6 +60,45 @@ export const DEFAULT_PROBLEMS: ProblemItem[] = [
       imageUrl: BARN_ILLUSTRATIONS.douchage_ventilation_attente,
       expectedImprovement: 'Le mouillage du cuir couplé à une ventilation active évapore l\'eau directement sur la peau de la vache et évacue très rapidement la chaleur accumulée avant la traite.'
     }
+  },
+  {
+    id: 'prob-5-faitage-ferme',
+    categoryId: 'ventilation',
+    title: 'Faîtage borgne fermé sans extraction de chaleur',
+    imageUrl: BARN_ILLUSTRATIONS.faitage_borgne_bloque,
+    expectedProblemDescription: 'Absence d\'ouverture au sommet du toit : l\'air chaud monte par convection naturelle et reste bloqué sous la toiture, créant une chape d\'air étouffante au-dessus du troupeau.',
+    solution: {
+      id: 'sol-5-lanterneau',
+      title: 'Lanterneau d\'extraction faîtière ouverte avec pare-pluie',
+      imageUrl: BARN_ILLUSTRATIONS.lanterneau_faitiere_ouvert,
+      expectedImprovement: 'L\'ouverture du faîtage déclenche l\'effet cheminée continu : l\'air chaud monte et s\'échappe vers le haut, aspirant l\'air frais latéral à travers tout le bâtiment.'
+    }
+  },
+  {
+    id: 'prob-6-tole-brulante',
+    categoryId: 'toiture',
+    title: 'Toiture en bac acier nu non isolée rayonnant à 68°C',
+    imageUrl: BARN_ILLUSTRATIONS.tole_brulante_sans_isolation,
+    expectedProblemDescription: 'La tôle métallique nue exposée au soleil d\'été chauffe intensément et se comporte comme un immense radiateur infrarouge rayonnant directement sur le dos des vaches.',
+    solution: {
+      id: 'sol-6-isolation',
+      title: 'Isolation sous toiture en panneaux sandwich 40 mm',
+      imageUrl: BARN_ILLUSTRATIONS.isolation_sous_toiture,
+      expectedImprovement: 'Les panneaux isolants stoppent la transmission de la chaleur solaire, maintiennent la sous-face du toit à température modérée et réduisent la charge thermique sur les animaux de 8 à 10°C.'
+    }
+  },
+  {
+    id: 'prob-7-aire-exercice',
+    categoryId: 'attente',
+    title: 'Aire d\'exercice bétonnée sans ombre aux heures chaudes',
+    imageUrl: BARN_ILLUSTRATIONS.cour_exterieure_soleil,
+    expectedProblemDescription: 'La dalle extérieure en béton absorbe le plein soleil et restitue une chaleur étouffante. Sans aucun ombrage, les animaux évitent l\'extérieur et s\'agglutinent à l\'intérieur.',
+    solution: {
+      id: 'sol-7-voiles',
+      title: 'Voiles d\'ombrage et auvent de protection solaire',
+      imageUrl: BARN_ILLUSTRATIONS.voiles_ombrage_auvent,
+      expectedImprovement: 'La pose de toiles d\'ombrage et d\'avancées de toiture bloque 80% des UV, crée une zone de circulation ombragée et permet aux vaches d\'évoluer sans stress.'
+    }
   }
 ];
 

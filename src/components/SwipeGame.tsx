@@ -68,13 +68,11 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
   const [zoomModal, setZoomModal] = useState<{
     isOpen: boolean;
     url: string;
-    title: string;
+    title?: string;
     subtitle?: string;
   }>({
     isOpen: false,
-    url: '',
-    title: '',
-    subtitle: ''
+    url: ''
   });
 
   // Animation swipe
@@ -128,7 +126,6 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
   // Validation Écran 1 -> passage à l'Écran 2
   const handleValidateProblemObservation = () => {
     if (!studentProblemObservation.trim()) {
-      alert('Veuillez expliciter ce que vous constatez sur cette photo avant de continuer.');
       return;
     }
     setStep(2);
@@ -161,7 +158,6 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
   const handleConfirmKeepWithImprovement = () => {
     if (!retainingSolution || !currentProblem) return;
     if (!improvementText.trim()) {
-      alert('Veuillez décrire ce qui constitue une amélioration à vos yeux.');
       return;
     }
 
@@ -239,14 +235,12 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
         <p className="text-xs text-slate-500">
           Ajoutez des photos ou réinitialisez les données d'exemple.
         </p>
-        {!isStudentMode && (
-          <button
-            onClick={onOpenAdmin}
-            className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold"
-          >
-            Gérer les photos
-          </button>
-        )}
+        <button
+          onClick={onOpenAdmin}
+          className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs transition-all"
+        >
+          Ouvrir les paramètres & charger un jeu
+        </button>
       </div>
     );
   }
@@ -262,8 +256,6 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
         isOpen={zoomModal.isOpen}
         onClose={() => setZoomModal({ ...zoomModal, isOpen: false })}
         imageUrl={zoomModal.url}
-        title={zoomModal.title}
-        subtitle={zoomModal.subtitle}
       />
 
       {/* Barre de Progression de la Série (Cas X / 10) */}
@@ -319,26 +311,21 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
                 alt={currentProblem.title}
                 onClick={() => setZoomModal({
                   isOpen: true,
-                  url: currentProblem.imageUrl,
-                  title: currentProblem.title,
-                  subtitle: 'Photo Problème (Plein écran & Zoom)'
+                  url: currentProblem.imageUrl
                 })}
                 className="w-full h-full object-contain cursor-pointer"
               />
 
-              {/* Bouton Loupe / Zoom Plein Écran */}
+              {/* Bouton Agrandir discret */}
               <button
                 onClick={() => setZoomModal({
                   isOpen: true,
-                  url: currentProblem.imageUrl,
-                  title: currentProblem.title,
-                  subtitle: 'Photo Problème (Plein écran & Zoom)'
+                  url: currentProblem.imageUrl
                 })}
-                className="absolute top-2.5 right-2.5 bg-black/75 hover:bg-black text-white p-2 rounded-xl backdrop-blur-xs flex items-center gap-1 text-[11px] font-bold shadow-md"
-                title="Plein écran et zoom sur la photo"
+                className="absolute top-2.5 right-2.5 bg-black/60 hover:bg-black/90 text-white p-2 rounded-xl backdrop-blur-xs flex items-center gap-1 text-[11px] font-bold shadow-md"
+                title="Plein écran"
               >
-                <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Zoomer</span>
+                <ZoomIn className="w-4 h-4" />
               </button>
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-3 pointer-events-none">
@@ -347,9 +334,6 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
                 </h2>
               </div>
             </div>
-            <p className="text-[10px] text-slate-400 text-center">
-              💡 Touchez la photo ou le bouton « Zoomer » pour inspecter les détails en plein écran
-            </p>
           </div>
 
           {/* Saisie obligatoire de ce que l'élève constate */}
@@ -360,7 +344,7 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
               <span className="text-rose-500">*</span>
             </label>
             <p className="text-[11px] text-slate-500">
-              Décrivez ce qui bloque le confort thermique des vaches. Votre réponse sera comparée à celle de l'éleveur :
+              Décrivez ce qui semble poser problème :
             </p>
             <textarea
               rows={3}
@@ -459,22 +443,20 @@ export const SwipeGame: React.FC<SwipeGameProps> = ({
                     REJETER ❌
                   </motion.div>
 
-                  {/* Bouton Zoom sur la photo candidate */}
+                  {/* Bouton Plein écran discret */}
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       setZoomModal({
                         isOpen: true,
-                        url: currentProposedCard.imageUrl,
-                        title: currentProposedCard.title,
-                        subtitle: 'Photo candidate (Plein écran & Zoom)'
+                        url: currentProposedCard.imageUrl
                       });
                     }}
-                    className="absolute top-3 left-3 z-10 bg-black/70 hover:bg-black text-white p-1.5 px-2 rounded-xl text-[10px] font-bold flex items-center gap-1 backdrop-blur-xs shadow-md"
+                    className="absolute top-3 left-3 z-10 bg-black/60 hover:bg-black/90 text-white p-2 rounded-xl text-xs flex items-center justify-center backdrop-blur-xs shadow-md"
+                    title="Plein écran"
                   >
-                    <ZoomIn className="w-3.5 h-3.5 text-emerald-300" />
-                    <span>Zoomer</span>
+                    <ZoomIn className="w-4 h-4" />
                   </button>
 
                   {/* Image candidate */}
